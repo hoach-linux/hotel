@@ -45,6 +45,7 @@ export default {
       const response = axios
         .get("http://localhost:8055/files")
         .then((response) => {
+          console.log(response.data.data[0].id)
           return axios.post("http://localhost:8055/items/hotels", {
             name: this.hotels.name,
             image: response.data.data[0].id,

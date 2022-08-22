@@ -1,7 +1,7 @@
 <template>
   <div class="about">
-    <h1>{{this.hotel.name}}</h1>
-    <img style="max-width: 500px;" :src="`http://localhost/assets/${this.hotel.logo}`" alt="">
+    <h1>{{this.hotels.name}}</h1>
+    <img style="max-width: 500px;" :src="`http://localhost/assets/${this.hotels.logo}`" alt="">
   </div>
 </template>
 
@@ -11,7 +11,7 @@
   export default {
     data() {
       return {
-        hotel: {
+        hotels: {
           name: '',
           logo: '',
           adress: '',
@@ -21,9 +21,9 @@
     methods: {
       async fetchHotel() {
         try {
-          const response = await axios.get('https://localhost/items/hotel')
+          const response = await axios.get('https://localhost/items/hotels')
           
-          this.hotel = response.data.data[0]
+          this.hotels = response.data.data[0]
         } catch (error) {
           
         }
