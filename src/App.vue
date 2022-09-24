@@ -4,13 +4,14 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
+    <RouterLink to="/">
+      <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125"/>
+    </RouterLink>
     <div class="wrapper">
-
       <nav>
-        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/admin/home">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/register">Register</RouterLink>
       </nav>
     </div>
   </header>
@@ -34,6 +35,8 @@ nav {
   font-size: 12px;
   text-align: center;
   margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
 }
 
 nav a.router-link-exact-active {
