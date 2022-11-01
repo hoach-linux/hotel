@@ -8,6 +8,7 @@ import "./registerServiceWorker";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { faHotel } from "@fortawesome/free-solid-svg-icons";
 import { faBlog } from "@fortawesome/free-solid-svg-icons";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
@@ -16,7 +17,7 @@ import "./style.css";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 
-library.add(faBlog, faCircleInfo, faArrowLeft, faRightFromBracket, faArrowDown);
+library.add(faBlog, faCircleInfo, faArrowLeft, faRightFromBracket, faArrowDown, faHotel);
 
 const app = createApp(App);
 

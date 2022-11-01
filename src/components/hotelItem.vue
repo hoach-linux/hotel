@@ -1,0 +1,151 @@
+<template>
+  <div class="post-wrapper">
+    <transition mode="out-in">
+      <div class="post min-w-full">
+        <div>
+          <div class="post-main title mb-8">{{ hotel.title }}</div>
+          <div class="img-wrapper">
+            <img
+              :src="`https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/assets/${hotel.logo}`"
+              alt=""
+              class="img"
+            />
+          </div>
+          <p
+            class="
+              post-main
+              first-line:uppercase first-line:tracking-widest
+              first-letter:text-7xl
+              first-letter:font-bold
+              first-letter:text-white
+              first-letter:mr-3
+              first-letter:float-left
+              selection:bg-sky-300 selection:text-sky-900
+            "
+          >
+            {{ hotel.address }}
+          </p>
+        </div>
+        <div class="buttons">
+          <my-button
+            class="btn-read_more-post post-button"
+            @click="$router.push(`/hotels/${hotel.id}`)"
+            >Menu</my-button
+          >
+          <my-button
+            class="btn-delete-post post-button"
+            @click="$emit('remove', hotel)"
+            >Remove</my-button
+          >
+        </div>
+      </div>
+    </transition>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      maxSymbol: 300,
+    };
+  },
+  props: {
+    hotel: {
+      type: Object,
+      required: true,
+    },
+  },
+  methods: {
+    truncate(hotel) {
+      if (hotel.address != null) {
+        hotel.address =
+          hotel.address.length > this.maxSymbol
+            ? `${hotel.address.slice(0, this.maxSymbol - 1)}...`
+            : hotel.address;
+      }
+    },
+  },
+  mounted() {
+    this.truncate(this.hotel);
+  },
+};
+</script>
+
+<style scoped>
+.img-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.img {
+  max-width: 100%;
+  border-radius: 10px;
+}
+.post-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.post {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  color: var(--main-text-color);
+  margin: 10px 0;
+  user-select: none;
+  border-radius: 10px;
+  background: var(--white-color);
+}
+.post:hover .buttons {
+  max-height: 53px;
+  opacity: 1;
+  transform: scale(1);
+}
+.post:hover .buttons > button {
+  display: block;
+}
+.post-main {
+  min-width: 100%;
+}
+
+.title {
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.buttons {
+  position: relative;
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  opacity: 0;
+  transition: 0.3s ease-in-out;
+  max-height: 0px;
+  transform: scale(0);
+}
+.buttons > .post-button {
+  margin: 0 5px;
+  flex: 1;
+  transition: 0.3 ease-in-out;
+  min-width: 0 !important;
+}
+.buttons > .post-button:hover {
+  flex: 2;
+}
+.btn-delete-post {
+  color: #fff !important;
+  background: #c21e56 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: 0.3s ease-in-out !important;
+  border-radius: 10px !important;
+}
+.btn-delete-post:hover {
+  box-shadow: 0 15px 20px #740127;
+  background: #df1659 !important;
+  color: #fff !important;
+}
+</style>

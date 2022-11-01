@@ -39,38 +39,22 @@
         "
         >Continue</my-button
       >
-      <div class="main-register-offer flex justify-between">
-        <p
-          @click="$router.push('/posts')"
-          class="
-            text-right
-            cursor-pointer
-            mt-2
-            underline underline-offset-8
-            hover:underline-offset-4
-            duration-300
-            hover:text-blue-400
-            ease-out
-          "
-        >
-          Watch posts
-        </p>
-        <p
-          @click="$router.push('/login')"
-          class="
-            text-right
-            cursor-pointer
-            mt-2
-            underline underline-offset-8
-            hover:underline-offset-4
-            duration-300
-            hover:text-blue-400
-            ease-out
-          "
-        >
-          I have an account
-        </p>
-      </div>
+      <p
+        @click="$router.push('/login')"
+        class="
+          text-right
+          cursor-pointer
+          mt-2
+          underline underline-offset-8
+          hover:underline-offset-4
+          duration-300
+          hover:text-blue-400
+          ease-out
+        "
+      >
+        I have an account
+      </p>
+      <!-- <div class="main-register-offer flex justify-between"></div> -->
     </form>
   </div>
 </template>

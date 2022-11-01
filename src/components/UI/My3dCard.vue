@@ -11,7 +11,7 @@
         waves-effect waves-light
       "
       id="tilt"
-      @click="$router.push('/posts')"
+      @click="$router.push('/hotels')"
     >
       <h1 class="text-4xl text-center mb-5">{{ greeting }}</h1>
       <img
@@ -19,11 +19,6 @@
         alt=""
         class="max-h-full min-w-full mb-3 rounded-lg"
       />
-      <p class="text-xl">
-        Here you can see other people's posts and learn something new from the
-        world.
-      </p>
-      <p class="text-xl mt-3">This web application was created for everyone</p>
     </div>
   </div>
 </template>

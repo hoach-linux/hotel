@@ -8,8 +8,7 @@
     <img src="../../../public/img/icons/logo.png" alt="" class="logo">
     </div>
     <div class="navbar__btn" v-show="auth">
-      <my-button @click="$router.push('/posts')" class="waves-effect waves-light">Posts</my-button>
-      <my-button @click="$router.push('/about')" class="waves-effect waves-light">About</my-button>
+      <my-button @click="$router.push('/posts')" class="waves-effect waves-light">Hotels</my-button>
       <div class="activeBtn"></div>
     </div>
     <button @click="logOut" v-if="auth" class="log-out text-white border-2 border-rose-700 w-40 h-12 ml-2 mr-4 font-semibold transition ease-in-out duration-150 hover:w-60 rounded-[10px] waves-effect waves-light">
@@ -18,13 +17,9 @@
     </button>
   </div>
   <div class="navbar__btn bottombar__btn">
-    <my-button @click="$router.push('/posts')" class="waves-effect waves-light">
-      <font-awesome-icon icon="fa-solid fa-blog" />
-      <p>Posts</p>
-    </my-button>
-    <my-button @click="$router.push('/about')" class="waves-effect waves-light">
-      <font-awesome-icon icon="fa-solid fa-circle-info" />
-      <p>About</p>
+    <my-button @click="$router.push('/hotels')" class="waves-effect waves-light">
+      <font-awesome-icon icon="fa-solid fa-hotel" />
+      <p>hotels</p>
     </my-button>
     <div class="activeBtn"></div>
   </div>
@@ -106,7 +101,6 @@ export default {
 .navbar__btn {
   position: relative;
   display: flex;
-  min-width: 270px;
   justify-content: space-between;
 }
 .navbar__btn > button {
@@ -127,7 +121,7 @@ export default {
   top: 0;
   left: 0;
   min-height: 100%;
-  min-width: 48%;
+  min-width: 100%;
   border-radius: 10px;
   background: var(--white-color);
   transition: 0.3s ease-in-out;
@@ -159,7 +153,7 @@ export default {
   backdrop-filter: blur(4px);
 }
 .bottombar__btn > button {
-  min-width: 50%;
+  min-width: 100%;
   min-height: 70px;
   display: flex;
   justify-content: center;
@@ -167,10 +161,10 @@ export default {
   flex-direction: column;
 }
 .bottombar__btn > button:hover {
-  min-width: 50% !important;
+  min-width: 100% !important;
 }
 .bottombar__btn > .activeBtn {
-  min-width: 50%;
+  min-width: 100%;
 }
 p {
   line-height: 22.5px;

@@ -1,7 +1,6 @@
 import Main from "@/pages/MainPage";
-import PostPage from "@/pages/PostPage";
-import AboutPage from "@/pages/AboutPage";
-import PostIdPage from "@/pages/PostIdPage";
+import HotelPage from "@/pages/HotelPage";
+import HotelIdPage from "@/pages/HotelIdPage";
 import Register from "@/pages/Register";
 import Login from "@/pages/Login";
 import { createRouter, createWebHistory } from "vue-router";
@@ -13,19 +12,14 @@ const routes = [
     component: Main,
   },
   {
-    path: "/posts",
-    component: PostPage,
-    name: "posts",
+    path: "/hotels",
+    component: HotelPage,
+    name: "hotels",
   },
   {
-    path: "/about",
+    path: "/hotels/:id",
     meta: { auth: true },
-    component: AboutPage,
-  },
-  {
-    path: "/posts/:id",
-    meta: { auth: true },
-    component: PostIdPage,
+    component: HotelIdPage,
   },
   {
     path: "/register",
