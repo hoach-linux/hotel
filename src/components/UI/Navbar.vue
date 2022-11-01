@@ -8,7 +8,7 @@
     <img src="../../../public/img/icons/logo.png" alt="" class="logo">
     </div>
     <div class="navbar__btn" v-show="auth">
-      <my-button @click="$router.push('/posts')" class="waves-effect waves-light">Hotels</my-button>
+      <my-button @click="$router.push('/hotels')" class="waves-effect waves-light">Hotels</my-button>
       <div class="activeBtn"></div>
     </div>
     <button @click="logOut" v-if="auth" class="log-out text-white border-2 border-rose-700 w-40 h-12 ml-2 mr-4 font-semibold transition ease-in-out duration-150 hover:w-60 rounded-[10px] waves-effect waves-light">
