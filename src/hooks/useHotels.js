@@ -12,7 +12,12 @@ export default function usePosts(limit) {
   const isHotelLoading = ref(true);
   const fetching = async () => {
     try {
-      const allHotels = await axios.get(`${serverUrl.value}/items/hotels`, {
+      const allHotels = await axios({
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        method: "get",
+        url: `${serverUrl.value}/items/hotels`,
         params: {
           meta: meta.value,
         },
@@ -22,6 +27,9 @@ export default function usePosts(limit) {
       page.value = totalPages.value;
 
       const response = await axios.get(`${serverUrl.value}/items/hotels`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
         params: {
           page: page.value,
           limit: limit,

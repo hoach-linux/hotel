@@ -1,40 +1,37 @@
 <template>
   <div class="post-id-page container">
-    <font-awesome-icon
-      icon="fa-solid fa-arrow-left"
-      class="return waves-effect waves-light"
-      @click="$router.push('/hotels')"
-    />
-    <div
-      v-for="post in posts"
-      :post="post"
-      :key="post.id"
-      style="will-change: transform"
-    >
-      <div class="post min-w-full">
-        <div>
-          <div class="post-main title mb-8">{{ post.title }}</div>
-          <div class="img-wrapper">
-            <img
-              :src="`https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/assets/${post.image}`"
-              alt=""
-              class="img"
-            />
-          </div>
-          <p
-            class="
-              post-main
-              first-line:uppercase first-line:tracking-widest
-              first-letter:text-7xl
-              first-letter:font-bold
-              first-letter:text-white
-              first-letter:mr-3
-              first-letter:float-left
-              selection:bg-sky-300 selection:text-sky-900
-            "
-          >
-            {{ post.body }}
-          </p>
+    <div class="app__btns" v-if="auth">
+      <my-button @click="showDialog" class="create-post flex-1 md:flex-auto m-0"
+        >Create Menu</my-button
+      >
+    </div>
+    <teleport to="body">
+      <transition name="modal-show">
+        <my-dialog v-model:show="dialogVisible" style="will-change: transform">
+          <menu-form @create="createMenu" />
+        </my-dialog>
+      </transition>
+    </teleport>
+    <div class="menus">
+      <div
+        v-for="menu in menus"
+        :menu="menu"
+        :key="menu.id"
+        style="will-change: transform"
+        class="post min-w-full flex-col md:flex-row"
+      >
+        <div class="img-wrapper min-h-full min-w-full md:min-w-0">
+          <img
+            :src="`https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/assets/${menu.logo}`"
+            alt=""
+            class="img"
+          />
+        </div>
+        <div class="main-menu md:mt-0 md:ml-5 ml-0 flex-1">
+          <div class="post-main title mb-8 mt-4">{{ menu.title }}</div>
+          <blockquote class="post-main">
+            {{ menu.description }}
+          </blockquote>
         </div>
       </div>
     </div>
@@ -44,52 +41,108 @@
 <script>
 import axios from "axios";
 import hotelItem from "@/components/hotelItem.vue";
+import menuForm from "@/components/menuForm.vue";
+import { ref } from "@vue/runtime-core";
 
 export default {
-  components: { hotelItem },
+  components: { hotelItem, menuForm },
   data() {
     return {
-      posts: [],
+      menus: [],
+      dialogVisible: false,
+    };
+  },
+  setup() {
+    const auth = ref(localStorage.getItem("token"));
+
+    return {
+      auth,
     };
   },
   methods: {
-    filterPost() {
-      this.posts = this.posts.filter((p) => p.id == this.$route.params.id);
+    filterMenu() {
+      this.menus = this.menus.filter((p) => p.id == this.$route.params.id);
     },
-    async fetchPost() {
+    showDialog() {
+      this.dialogVisible = true;
+    },
+    async fetchMenu() {
       try {
-        const response = await axios.get(this.$store.state.post.serverUrl);
+        const response = await axios.get(
+          `${this.$store.state.post.serverUrl}/items/menu`
+        );
 
-        this.posts = response.data.data;
-
-        this.filterPost();
+        this.menus = response.data.data;
       } catch (error) {}
+    },
+    createMenu(menu, file) {
+      this.dialogVisible = false;
+      this.pushMenuImage(file);
+
+      setTimeout(() => {
+        const response = axios
+          .get(`${this.$store.state.post.serverUrl}/files?sort=uploaded_on`, {
+            params: {
+              limit: 1000,
+            },
+          })
+          .then((response) => {
+            let responseData = response.data.data;
+
+            return axios({
+              method: "post",
+              url: `${this.$store.state.post.serverUrl}/items/menu`,
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              data: {
+                title: menu.title,
+                logo: responseData[responseData.length - 1].id,
+                description: menu.description,
+              },
+            })
+              .then(() => this.menus.unshift(menu))
+              .then(() => {
+                document.location.reload(true);
+              });
+          });
+      }, 1000);
+    },
+    pushMenuImage(file) {
+      const formData = new FormData();
+      console.log(file);
+
+      formData.append("title", "Image");
+      formData.append("file", file.files[0]);
+
+      return axios.post(`${this.$store.state.post.serverUrl}/files`, formData);
     },
   },
   mounted() {
-    this.fetchPost();
+    this.fetchMenu();
   },
 };
 </script>
 
-<style>
+<style scoped>
 .post-id-page .post {
   margin: 10px 0;
   margin-bottom: 80px !important;
   padding: 15px;
   border-radius: 10px;
   display: flex;
-  flex-direction: column;
   z-index: 1;
   color: var(--main-text-color);
   max-width: 900px;
   background: var(--white-color);
+  min-height: 250px;
 }
-
+.menu {
+  min-height: 50%;
+}
 .post-main {
   min-width: 100%;
 }
-
 .title {
   font-size: 25px;
   margin-bottom: 20px;
@@ -117,10 +170,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  max-width: 35%;
 }
 .img {
   max-width: 100%;
+  min-height: 100%;
   border-radius: 10px;
 }
 .post-main {

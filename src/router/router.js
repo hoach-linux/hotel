@@ -14,11 +14,11 @@ const routes = [
   {
     path: "/hotels",
     component: HotelPage,
+    meta: { auth: true },
     name: "hotels",
   },
   {
     path: "/hotels/:id",
-    meta: { auth: true },
     component: HotelIdPage,
   },
   {

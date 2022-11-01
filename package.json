@@ -1,6 +1,6 @@
 {
-  "name": "CNTT",
-  "version": "3.0.1",
+  "name": "hotel",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

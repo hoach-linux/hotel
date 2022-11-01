@@ -97,6 +97,9 @@ export default {
             return axios({
               method: "post",
               url: `${this.serverUrl}/items/hotels`,
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
               data: {
                 title: hotel.title,
                 logo: responseData[responseData.length - 1].id,
