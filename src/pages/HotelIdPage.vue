@@ -27,8 +27,8 @@
             class="img"
           />
         </div>
-        <div class="main-menu md:mt-0 md:ml-5 ml-0 flex-1">
-          <div class="post-main title mb-8 mt-4">{{ menu.title }}</div>
+        <div class="main-menu md:mt-0 md:ml-5 ml-0 mt-5 flex-1">
+          <div class="post-main title mb-2">{{ menu.title }}</div>
           <blockquote class="post-main">
             {{ menu.description }}
           </blockquote>
@@ -145,7 +145,6 @@ export default {
 }
 .title {
   font-size: 25px;
-  margin-bottom: 20px;
   font-weight: 600;
 }
 .return {
