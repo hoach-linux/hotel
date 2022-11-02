@@ -45,6 +45,7 @@ import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import useHotels from "@/hooks/useHotels";
 import useSortedHotels from "@/hooks/useSortedHotels";
 import useSearchedHotels from "@/hooks/useSearchedHotels";
+import { useStore } from "vuex";
 
 export default {
   components: {
@@ -55,6 +56,7 @@ export default {
     return { dialogVisible: false };
   },
   setup() {
+    const store = useStore();
     const {
       hotels,
       totalPages,
@@ -66,6 +68,8 @@ export default {
     } = useHotels(10);
     const { selectedSort, sortedHotels } = useSortedHotels(hotels);
     const { searchQuery, searchedHotels } = useSearchedHotels(sortedHotels);
+
+    store.dispatch("post/authTrue");
 
     return {
       hotels,
@@ -187,18 +191,6 @@ h1 {
 } */
 .posts-loading {
   color: var(--main-text-color);
-}
-
-.v-enter-active,
-.v-leave-active {
-  transition: 0.3s ease-in-out;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: 0.3s ease-in-out;
 }
 
 .modal-show-enter-active,

@@ -44,6 +44,16 @@ export default {
 
         message.value = `Welcome ${getUserData[0].first_name} ${getUserData[0].last_name} !`;
       } catch (error) {
+        await axios.post(
+          "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/auth/logout",
+          {
+            refresh_token: localStorage.getItem("refresh_token"),
+          }
+        );
+        localStorage.clear();
+
+        store.dispatch("post/authFalse");
+
         router.push("/register");
       }
     });

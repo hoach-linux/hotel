@@ -85,7 +85,17 @@ body {
 .fade-leave-active {
   transition: opacity 0.3s ease-in-out;
 }
+.v-enter-active,
+.v-leave-active {
+  transition: 0.3s ease-in-out;
+}
 
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: 0.3s ease-in-out;
+}
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;

@@ -5,6 +5,7 @@
         >Create Menu</my-button
       >
     </div>
+    <my-header :header="'Today\'s menu'" class="header" />
     <teleport to="body">
       <transition name="modal-show">
         <my-dialog v-model:show="dialogVisible" style="will-change: transform">
@@ -12,29 +13,37 @@
         </my-dialog>
       </transition>
     </teleport>
-    <div class="menus">
-      <div
-        v-for="menu in menus"
-        :menu="menu"
-        :key="menu.id"
-        style="will-change: transform"
-        class="post min-w-full flex-col md:flex-row"
-      >
-        <div class="img-wrapper min-h-full min-w-full md:min-w-0">
-          <img
-            :src="`https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/assets/${menu.logo}`"
-            alt=""
-            class="img"
-          />
-        </div>
-        <div class="main-menu md:mt-0 md:ml-5 ml-0 mt-5 flex-1">
-          <div class="post-main title mb-2">{{ menu.title }}</div>
-          <blockquote class="post-main">
-            {{ menu.description }}
-          </blockquote>
+    <transition mode="out-in">
+      <div class="menus">
+        <div
+          v-for="menu in menus"
+          :menu="menu"
+          :key="menu.id"
+          style="will-change: transform"
+          class="post min-w-full flex-col md:flex-row"
+        >
+          <div class="img-wrapper min-h-full min-w-full md:min-w-0">
+            <img
+              :src="`https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/assets/${menu.logo}`"
+              alt=""
+              class="img"
+            />
+          </div>
+          <div class="main-menu md:mt-0 md:ml-5 ml-0 mt-5 flex-1">
+            <div class="post-main title mb-2">{{ menu.title }}</div>
+            <blockquote class="post-main mb-10">
+              {{ menu.description }}
+            </blockquote>
+            <my-button
+              v-if="auth"
+              @click="removeMenu(menu)"
+              class="button-remove content-between min-w-full"
+              >Remove</my-button
+            >
+          </div>
         </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -43,6 +52,7 @@ import axios from "axios";
 import hotelItem from "@/components/hotelItem.vue";
 import menuForm from "@/components/menuForm.vue";
 import { ref } from "@vue/runtime-core";
+import { useStore } from "vuex";
 
 export default {
   components: { hotelItem, menuForm },
@@ -53,7 +63,12 @@ export default {
     };
   },
   setup() {
+    const store = useStore();
     const auth = ref(localStorage.getItem("token"));
+
+    if (auth.value) {
+      store.dispatch("post/authTrue");
+    }
 
     return {
       auth,
@@ -117,6 +132,22 @@ export default {
 
       return axios.post(`${this.$store.state.post.serverUrl}/files`, formData);
     },
+    removeMenu(menu) {
+      try {
+        this.menus = this.menus.filter((m) => m.id !== menu.id);
+
+        return axios.delete(
+          `${this.$store.state.post.serverUrl}/items/menu/${menu.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+      } catch (error) {
+        alert("You are not registered");
+      }
+    },
   },
   mounted() {
     this.fetchMenu();
@@ -127,21 +158,48 @@ export default {
 <style scoped>
 .post-id-page .post {
   margin: 10px 0;
-  margin-bottom: 80px !important;
+  margin-bottom: 20px !important;
   padding: 15px;
   border-radius: 10px;
   display: flex;
   z-index: 1;
   color: var(--main-text-color);
   max-width: 900px;
-  background: var(--white-color);
   min-height: 250px;
+  background: var(--white-color);
 }
 .menu {
   min-height: 50%;
 }
+.menus {
+  margin-bottom: 60px;
+}
+.main-menu {
+  display: flex;
+  flex-direction: column;
+}
 .post-main {
   min-width: 100%;
+}
+.button-remove {
+  color: #fff !important;
+  background: #c21e56 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: 0.3s ease-in-out !important;
+  border-radius: 10px !important;
+  min-width: 100%;
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  min-width: 60%;
+}
+.button-remove:hover {
+  box-shadow: 0 15px 20px #740127;
+  background: #df1659 !important;
+  color: #fff !important;
+  min-width: 60%;
 }
 .title {
   font-size: 25px;
@@ -187,6 +245,14 @@ export default {
     border-radius: 10px;
   }
   100% {
+  }
+}
+@media (max-width: 768px) {
+  .button-remove,
+  .button-remove:hover {
+    min-width: 100%;
+    position: relative;
+    right: 0;
   }
 }
 
