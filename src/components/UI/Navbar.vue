@@ -50,7 +50,7 @@ export default {
 
         store.dispatch("post/authFalse");
 
-        router.push("/register");
+        router.push("/login?message=logout");
       } catch (error) {
         alert(error);
       }

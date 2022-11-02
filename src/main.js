@@ -16,8 +16,16 @@ import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import "./style.css";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
+import messagePlugin from "./utils/message.plugin";
 
-library.add(faBlog, faCircleInfo, faArrowLeft, faRightFromBracket, faArrowDown, faHotel);
+library.add(
+  faBlog,
+  faCircleInfo,
+  faArrowLeft,
+  faRightFromBracket,
+  faArrowDown,
+  faHotel
+);
 
 const app = createApp(App);
 
@@ -32,6 +40,7 @@ directives.forEach((directive) => {
 document.addEventListener("DOMContentLoaded", () => {
   app.use(ElementPlus);
   app
+    .use(messagePlugin)
     .use(store)
     .use(router)
     .component("font-awesome-icon", FontAwesomeIcon)

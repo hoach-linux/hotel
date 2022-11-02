@@ -35,6 +35,7 @@
 import { reactive } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import messages from "@/utils/messages";
 
 export default {
   name: "Login",
@@ -55,7 +56,7 @@ export default {
         await localStorage.setItem("userData", response.config.data);
         await localStorage.setItem("token", response.data.data.access_token);
         await localStorage.setItem("refresh_token", response.data.data.refresh_token)
-        await router.push("/");
+        await router.push("/?message=login");
       } catch (error) {
         alert("Wrong email or password")
       }
@@ -66,6 +67,11 @@ export default {
       submit,
     };
   },
+  mounted() {
+    if(messages[this.$route.query.message]) {
+      this.$message(messages[this.$route.query.message])
+    }
+  }
 };
 </script>
 <style scoped>

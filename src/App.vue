@@ -61,6 +61,11 @@ export default {
 p {
   color: #fff;
 }
+.toast {
+  font-weight: 500;
+  background: var(--white-color);
+  border-radius: 10px;
+}
 .container {
   margin: 20px 10px;
   min-height: 100%;

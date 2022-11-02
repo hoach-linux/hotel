@@ -10,6 +10,7 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import footerVue from "@/components/footer.vue";
+import messages from "@/utils/messages";
 
 export default {
   components: {
@@ -61,6 +62,11 @@ export default {
     return {
       message,
     };
+  },
+  mounted() {
+    if (messages[this.$route.query.message]) {
+      this.$message(messages[this.$route.query.message]);
+    }
   },
 };
 </script>
