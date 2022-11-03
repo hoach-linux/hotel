@@ -60,7 +60,7 @@ export default {
     return {
       menus: [],
       dialogVisible: false,
-      userData: JSON.parse(localStorage.getItem("userData")), 
+      userData: JSON.parse(localStorage.getItem("userData")),
     };
   },
   setup() {
@@ -83,12 +83,21 @@ export default {
       this.dialogVisible = true;
     },
     async fetchMenu() {
+      let response;
       try {
-        const response = await axios.get(
-          `${this.$store.state.post.serverUrl}/items/menu?filter={ "user_created": { "email": "${this.userData.email}" }}`
-        );
+        if (this.auth) {
+          response = await axios.get(
+            `${this.$store.state.post.serverUrl}/items/menu?filter={ "user_created": { "email": "${this.userData.email}" }}`
+          );
 
-        this.menus = response.data.data;
+          this.menus = response.data.data;
+        } else {
+          response = await axios.get(
+            `${this.$store.state.post.serverUrl}/items/menu?filter={ "user_created": { "email": "${this.$route.params.email}" }}`
+          );
+          
+          this.menus = response.data.data;
+        }
       } catch (error) {}
     },
     createMenu(menu, file) {

@@ -1,8 +1,10 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 export default function usePosts(limit) {
   let page = ref(1);
+  const router = useRouter();
   const serverUrl = ref(
     "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net"
   );
@@ -42,7 +44,22 @@ export default function usePosts(limit) {
 
       hotels.value = await response.data.data.reverse();
     } catch (error) {
-      console.log(error.name, error.message);
+      if (error.message == "Request failed with status code 401") {
+        alert("Login timed out, please login again");
+
+        await axios.post(
+          "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/auth/logout",
+          {
+            refresh_token: localStorage.getItem("refresh_token"),
+          }
+        );
+        
+        localStorage.clear();
+
+        store.dispatch("post/authFalse");
+
+        router.push("/login");
+      }
     } finally {
       setTimeout(() => (isHotelLoading.value = false), 0);
     }

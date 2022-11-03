@@ -29,7 +29,7 @@
         <div class="buttons">
           <my-button
             class="btn-read_more-post post-button"
-            @click="$router.push(`/hotels/${hotel.id}`)"
+            @click="$router.push(`/hotels/${userData.email}`)"
             >Menu</my-button
           >
           <my-button
@@ -46,6 +46,7 @@
 export default {
   data() {
     return {
+      userData: JSON.parse(localStorage.getItem("userData")),
       maxSymbol: 300,
     };
   },

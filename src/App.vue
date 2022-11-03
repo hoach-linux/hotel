@@ -1,9 +1,9 @@
-<template lang="">
+<template>
   <navbar></navbar>
-  <div class="app">
+  <div class="app" id="smooth-wrapper">
     <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
-        <component :is="Component" />
+        <component :is="Component" id="smooth-content"/>
       </transition>
     </router-view>
   </div>

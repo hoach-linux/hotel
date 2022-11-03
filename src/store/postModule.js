@@ -2,6 +2,7 @@ import axios from "axios";
 
 export const postModule = {
   state: () => ({
+    userData: JSON.parse(localStorage.getItem("userData")),
     authenticated: false,
     auth: null,
     posts: [],
