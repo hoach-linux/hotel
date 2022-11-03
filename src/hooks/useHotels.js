@@ -10,6 +10,7 @@ export default function usePosts(limit) {
   const hotels = ref([]);
   const totalPages = ref(0);
   const isHotelLoading = ref(true);
+  const userData = ref(JSON.parse(localStorage.getItem("userData")));
   const fetching = async () => {
     try {
       const allHotels = await axios({
@@ -26,15 +27,18 @@ export default function usePosts(limit) {
       totalPages.value = Math.ceil(allHotels.data.meta.total_count / limit);
       page.value = totalPages.value;
 
-      const response = await axios.get(`${serverUrl.value}/items/hotels`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        params: {
-          page: page.value,
-          limit: limit,
-        },
-      });
+      const response = await axios.get(
+        `${serverUrl.value}/items/hotels?filter={ "user_created": { "email": "${userData.value.email}"} }`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          params: {
+            page: page.value,
+            limit: limit,
+          },
+        }
+      );
 
       hotels.value = await response.data.data.reverse();
     } catch (error) {

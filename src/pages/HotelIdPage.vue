@@ -60,6 +60,7 @@ export default {
     return {
       menus: [],
       dialogVisible: false,
+      userData: JSON.parse(localStorage.getItem("userData")), 
     };
   },
   setup() {
@@ -84,7 +85,7 @@ export default {
     async fetchMenu() {
       try {
         const response = await axios.get(
-          `${this.$store.state.post.serverUrl}/items/menu`
+          `${this.$store.state.post.serverUrl}/items/menu?filter={ "user_created": { "email": "${this.userData.email}" }}`
         );
 
         this.menus = response.data.data;

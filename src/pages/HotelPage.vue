@@ -97,8 +97,8 @@ export default {
         const response = axios
           .get(`${this.serverUrl}/files?sort=uploaded_on`, {
             params: {
-              limit: 1000000
-            }
+              limit: 1000000,
+            },
           })
           .then((response) => {
             let responseData = response.data.data;
@@ -118,8 +118,7 @@ export default {
               .then(() => this.hotels.unshift(hotel))
               .then(() => {
                 this.$router.push("/hotels?message=hotel_created");
-              })
-              .then(() => {
+                
                 document.location.reload(true);
               });
           });
