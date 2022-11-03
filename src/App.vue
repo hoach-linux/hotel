@@ -10,6 +10,7 @@
 </template>
 <script>
 import Navbar from "@/components/UI/Navbar";
+
 export default {
   components: { Navbar },
   data() {
@@ -72,7 +73,7 @@ p {
   min-height: 100%;
   max-width: 910px !important;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0 20px;
 }
 
 * {
