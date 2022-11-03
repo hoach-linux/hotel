@@ -98,7 +98,7 @@ export default {
         const response = axios
           .get(`${this.$store.state.post.serverUrl}/files?sort=uploaded_on`, {
             params: {
-              limit: 1000,
+              limit: 1000000,
             },
           })
           .then((response) => {

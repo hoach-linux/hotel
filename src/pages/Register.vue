@@ -62,6 +62,7 @@
 import axios from "axios";
 import { reactive } from "@vue/reactivity";
 import { useRouter } from "vue-router";
+import messages from '@/utils/messages';
 
 export default {
   name: "Register",
@@ -86,7 +87,7 @@ export default {
           role: data.role,
         }
       );
-      await router.push("/login");
+      await router.push("/login?message=registered");
     };
 
     return {

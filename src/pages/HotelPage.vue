@@ -46,6 +46,7 @@ import useHotels from "@/hooks/useHotels";
 import useSortedHotels from "@/hooks/useSortedHotels";
 import useSearchedHotels from "@/hooks/useSearchedHotels";
 import { useStore } from "vuex";
+import messages from "@/utils/messages";
 
 export default {
   components: {
@@ -94,7 +95,11 @@ export default {
 
       setTimeout(() => {
         const response = axios
-          .get(`${this.serverUrl}/files?sort=uploaded_on`)
+          .get(`${this.serverUrl}/files?sort=uploaded_on`, {
+            params: {
+              limit: 1000000
+            }
+          })
           .then((response) => {
             let responseData = response.data.data;
 
@@ -111,6 +116,9 @@ export default {
               },
             })
               .then(() => this.hotels.unshift(hotel))
+              .then(() => {
+                this.$router.push("/hotels?message=hotel_created");
+              })
               .then(() => {
                 document.location.reload(true);
               });
@@ -157,7 +165,11 @@ export default {
       // searchedPosts: "post/searchedPosts",
     }),
   },
-  mounted() {},
+  mounted() {
+    if (messages[this.$route.query.message]) {
+      this.$message(messages[this.$route.query.message]);
+    }
+  },
 };
 </script>
 
