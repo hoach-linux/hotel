@@ -36,6 +36,8 @@ import { reactive } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import messages from "@/utils/messages";
+import Cookies from "js-cookie";
+
 
 export default {
   name: "Login",
@@ -54,8 +56,10 @@ export default {
         });
 
         await localStorage.setItem("userData", response.config.data);
-        await localStorage.setItem("token", response.data.data.access_token);
-        await localStorage.setItem("refresh_token", response.data.data.refresh_token)
+
+        Cookies.set("token",`${response.data.data.access_token}`);
+        Cookies.set("refresh_token",`${response.data.data.refresh_token}`);
+
         await router.push("/?message=login");
       } catch (error) {
         alert("Wrong email or password")

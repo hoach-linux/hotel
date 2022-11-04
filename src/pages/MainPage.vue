@@ -11,6 +11,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import footerVue from "@/components/footer.vue";
 import messages from "@/utils/messages";
+import Cookies from "js-cookie"
 
 export default {
   components: {
@@ -32,7 +33,7 @@ export default {
               limit: 1000,
             },
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${Cookies.get("token")}`,
             },
           }
         );
@@ -48,10 +49,10 @@ export default {
         await axios.post(
           "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/auth/logout",
           {
-            refresh_token: localStorage.getItem("refresh_token"),
+            refresh_token: Cookies.get("refresh_token"),
           }
         );
-        localStorage.clear();
+        Cookies.remove("token")
 
         store.dispatch("post/authFalse");
 

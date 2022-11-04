@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import Cookies from "js-cookie"
 
 export default function usePosts(limit) {
   let page = ref(1);
@@ -17,7 +18,7 @@ export default function usePosts(limit) {
     try {
       const allHotels = await axios({
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${Cookies.get("token")}`,
         },
         method: "get",
         url: `${serverUrl.value}/items/hotels`,
@@ -33,7 +34,7 @@ export default function usePosts(limit) {
         `${serverUrl.value}/items/hotels?filter={ "user_created": { "email": "${userData.value.email}"} }`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${Cookies.get("token")}`,
           },
           params: {
             page: page.value,
@@ -50,11 +51,11 @@ export default function usePosts(limit) {
         await axios.post(
           "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/auth/logout",
           {
-            refresh_token: localStorage.getItem("refresh_token"),
+            refresh_token: Cookies.get("token"),
           }
         );
-        
-        localStorage.clear();
+
+        Cookies.remove("token");
 
         store.dispatch("post/authFalse");
 
@@ -69,12 +70,18 @@ export default function usePosts(limit) {
       if (page.value != 1) {
         page.value -= 1;
 
-        const response = await axios.get(`${serverUrl.value}/items/hotels`, {
-          params: {
-            page: page.value,
-            limit: limit,
-          },
-        });
+        const response = await axios.get(
+          `${serverUrl.value}/items/hotels?filter={ "user_created": { "email": "${userData.value.email}"}}`,
+          {
+            headers: {
+              Authorization: `Bearer ${Cookies.get("token")}`,
+            },
+            params: {
+              page: page.value,
+              limit: limit,
+            },
+          }
+        );
 
         hotels.value = await [...hotels.value, ...response.data.data.reverse()];
       }

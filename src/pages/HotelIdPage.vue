@@ -53,6 +53,7 @@ import hotelItem from "@/components/hotelItem.vue";
 import menuForm from "@/components/menuForm.vue";
 import { ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
+import Cookies from "js-cookie"
 
 export default {
   components: { hotelItem, menuForm },
@@ -65,7 +66,7 @@ export default {
   },
   setup() {
     const store = useStore();
-    const auth = ref(localStorage.getItem("token"));
+    const auth = ref(Cookies.get("token"));
 
     if (auth.value) {
       store.dispatch("post/authTrue");
@@ -95,7 +96,7 @@ export default {
           response = await axios.get(
             `${this.$store.state.post.serverUrl}/items/menu?filter={ "user_created": { "email": "${this.$route.params.email}" }}`
           );
-          
+
           this.menus = response.data.data;
         }
       } catch (error) {}
@@ -118,7 +119,7 @@ export default {
               method: "post",
               url: `${this.$store.state.post.serverUrl}/items/menu`,
               headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${this.auth}`,
               },
               data: {
                 title: menu.title,
@@ -150,7 +151,7 @@ export default {
           `${this.$store.state.post.serverUrl}/items/menu/${menu.id}`,
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${this.auth}`,
             },
           }
         );

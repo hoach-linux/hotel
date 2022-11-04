@@ -4,6 +4,7 @@ import HotelIdPage from "@/pages/HotelIdPage";
 import Register from "@/pages/Register";
 import Login from "@/pages/Login";
 import { createRouter, createWebHistory } from "vue-router";
+import Cookies from "js-cookie"
 
 const routes = [
   {
@@ -38,7 +39,8 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('token')
+  let token = Cookies.get("token")
+
   const requireAuth = to.matched.some(page => page.meta.auth)
 
   if(!token && requireAuth) {

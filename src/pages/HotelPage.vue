@@ -47,6 +47,7 @@ import useSortedHotels from "@/hooks/useSortedHotels";
 import useSearchedHotels from "@/hooks/useSearchedHotels";
 import { useStore } from "vuex";
 import messages from "@/utils/messages";
+import Cookies from "js-cookie"
 
 export default {
   components: {
@@ -107,7 +108,7 @@ export default {
               method: "post",
               url: `${this.serverUrl}/items/hotels`,
               headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${Cookies.get("token")}`,
               },
               data: {
                 title: hotel.title,
@@ -139,7 +140,7 @@ export default {
 
         return axios.delete(`${this.serverUrl}/items/hotels/${hotel.id}`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${Cookies.get("token")}`,
           },
         });
       } catch (error) {

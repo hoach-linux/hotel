@@ -29,6 +29,8 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { computed } from "@vue/runtime-core";
 import axios from "axios";
+import Cookies from "js-cookie"
+
 export default {
   setup() {
     const router = useRouter();
@@ -43,10 +45,10 @@ export default {
         let response = await axios.post(
           "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/auth/logout",
           {
-            refresh_token: localStorage.getItem("refresh_token"),
+            refresh_token: Cookies.get("refresh_token"),
           }
         );
-        localStorage.clear();
+        Cookies.remove("token")
 
         store.dispatch("post/authFalse");
 
