@@ -44,6 +44,8 @@ export default {
           (user) => userData.email === user.email
         );
 
+        Cookies.set("userId", getUserData[0].id)
+
         message.value = `Welcome ${getUserData[0].first_name} ${getUserData[0].last_name} !`;
       } catch (error) {
         await axios.post(

@@ -19,7 +19,7 @@ const routes = [
     name: "hotels",
   },
   {
-    path: "/hotels/:email",
+    path: "/hotels/:id",
     component: HotelIdPage,
   },
   {

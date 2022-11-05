@@ -1,7 +1,8 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
+import { useStore } from "vuex";
 
 export default function usePosts(limit) {
   let page = ref(1);
@@ -12,6 +13,7 @@ export default function usePosts(limit) {
   const meta = ref("total_count");
   const hotels = ref([]);
   const totalPages = ref(0);
+  const store = useStore();
   const isHotelLoading = ref(true);
   const userData = ref(JSON.parse(localStorage.getItem("userData")));
   const fetching = async () => {

@@ -29,7 +29,7 @@
         <div class="buttons">
           <my-button
             class="btn-read_more-post post-button"
-            @click="$router.push(`/hotels/${userData.email}`)"
+            @click="$router.push(`/hotels/${userId}`)"
             >Menu</my-button
           >
           <my-button
@@ -43,11 +43,13 @@
   </div>
 </template>
 <script>
+import Cookies from "js-cookie"
+
 export default {
   data() {
     return {
-      userData: JSON.parse(localStorage.getItem("userData")),
       maxSymbol: 300,
+      userId: Cookies.get('userId'),
     };
   },
   props: {

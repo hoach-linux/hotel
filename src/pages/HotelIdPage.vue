@@ -51,9 +51,9 @@
 import axios from "axios";
 import hotelItem from "@/components/hotelItem.vue";
 import menuForm from "@/components/menuForm.vue";
-import { ref } from "@vue/runtime-core";
+import { onMounted, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
 
 export default {
   components: { hotelItem, menuForm },
@@ -77,29 +77,28 @@ export default {
     };
   },
   methods: {
-    filterMenu() {
-      this.menus = this.menus.filter((p) => p.id == this.$route.params.id);
-    },
     showDialog() {
       this.dialogVisible = true;
     },
-    async fetchMenu() {
+    async fetchMenu(userId) {
       let response;
       try {
         if (this.auth) {
           response = await axios.get(
-            `${this.$store.state.post.serverUrl}/items/menu?filter={ "user_created": { "email": "${this.userData.email}" }}`
+            `${this.$store.state.post.serverUrl}/items/menu?filter={ "user_created": { "id": "${Cookies.get("userId")}" }}`
           );
 
           this.menus = response.data.data;
         } else {
           response = await axios.get(
-            `${this.$store.state.post.serverUrl}/items/menu?filter={ "user_created": { "email": "${this.$route.params.email}" }}`
+            `${this.$store.state.post.serverUrl}/items/menu?filter={ "user_created": { "id": "${this.$route.params.id}" }}`
           );
 
           this.menus = response.data.data;
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     },
     createMenu(menu, file) {
       this.dialogVisible = false;
@@ -161,7 +160,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchMenu();
+    this.fetchMenu(this.userId);
   },
 };
 </script>

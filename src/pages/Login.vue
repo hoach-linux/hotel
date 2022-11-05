@@ -57,6 +57,15 @@ export default {
 
         await localStorage.setItem("userData", response.config.data);
 
+        let getUserData = JSON.parse(localStorage.getItem("userData"))
+        let userData = {
+          email: getUserData.email
+        }
+        let userDataJson = JSON.stringify(userData)
+
+        localStorage.setItem("userData", userDataJson)
+        console.log(userDataJson)
+
         Cookies.set("token",`${response.data.data.access_token}`);
         Cookies.set("refresh_token",`${response.data.data.refresh_token}`);
 
