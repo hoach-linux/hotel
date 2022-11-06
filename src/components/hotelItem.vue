@@ -34,7 +34,7 @@
           >
           <my-button
             class="btn-delete-post post-button"
-            v-if="userData.userRole !== 'client'"
+            v-if="userData.userRole === 'owner'"
             @click="$emit('remove', hotel)"
             >Remove</my-button
           >
