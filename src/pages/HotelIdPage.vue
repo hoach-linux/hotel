@@ -80,7 +80,7 @@ export default {
     showDialog() {
       this.dialogVisible = true;
     },
-    async fetchMenu(userId) {
+    async fetchMenu() {
       let response;
       try {
         if (this.auth) {
@@ -160,7 +160,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchMenu(this.userId);
+    this.fetchMenu();
   },
 };
 </script>

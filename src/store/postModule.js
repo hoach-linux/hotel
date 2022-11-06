@@ -19,8 +19,9 @@ export const postModule = {
     serverUrl:
       "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net",
     sortOptions: [
-      { value: "title", name: "Title" },
-      { value: "body", name: "Description" },
+      { value: "admin", name: "Admin" },
+      { value: "owner", name: "Owner" },
+      { value: "client", name: "Client"}
     ],
   }),
   getters: {

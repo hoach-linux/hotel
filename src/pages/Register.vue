@@ -5,6 +5,12 @@
       @submit.prevent="submit"
     >
       <h1 class="text-4xl mb-5">Sign in</h1>
+      <my-select
+        v-model:modelValue="selected"
+        class="select flex-1"
+        :options="sortOptions"
+        @userSelect="userSelect"
+      />
       <my-input
         v-model:value="data.firstName"
         type="text"
@@ -60,40 +66,94 @@
 </template>
 <script>
 import axios from "axios";
-import { reactive } from "@vue/reactivity";
+import { reactive, ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
-import messages from '@/utils/messages';
+import messages from "@/utils/messages";
+import MySelect from "@/components/UI/MySelect.vue";
+import { mapState } from "vuex";
 
 export default {
+  components: {
+    MySelect,
+  },
   name: "Register",
   setup() {
     const data = reactive({
       firstName: "",
       lastName: "",
-      role: "4e967166-975d-4a12-8fd8-e3fdb9e5be54",
+      clientRole: "4e967166-975d-4a12-8fd8-e3fdb9e5be54",
+      adminRole: "45facacc-afc6-4e96-9801-610a56153cde",
+      ownerRole: "525d769c-b5cb-4476-beb6-c228df5cc30f",
       email: "",
       password: "",
+      hotelName: "",
     });
     const router = useRouter();
+    const selected = ref("");
+    const selectedRole = ref("");
 
     const submit = async () => {
-      await axios.post(
-        "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/users",
-        {
-          first_name: data.firstName,
-          last_name: data.lastName,
-          email: data.email,
-          password: data.password,
-          role: data.role,
+      try {
+        console.log(selectedRole)
+        if (selectedRole.value === "client" || selectedRole.value === "") {
+          await axios.post(
+            "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/users",
+            {
+              first_name: data.firstName,
+              last_name: data.lastName,
+              email: data.email,
+              password: data.password,
+              role: data.clientRole,
+            }
+          );
+
+          await router.push("/login?message=registered");
+        } else if (selectedRole.value === "admin") {
+          await axios.post(
+            "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/users",
+            {
+              first_name: data.firstName,
+              last_name: data.lastName,
+              email: data.email,
+              password: data.password,
+              role: data.adminRole,
+            }
+          );
+          await router.push("/login?message=registered");
+        } else if (selectedRole.value === "owner") {
+          await axios.post(
+            "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/users",
+            {
+              first_name: data.firstName,
+              last_name: data.lastName,
+              email: data.email,
+              password: data.password,
+              role: data.ownerRole,
+            }
+          );
+          await router.push("/login?message=registered");
         }
-      );
-      await router.push("/login?message=registered");
+      } catch (error) {
+
+      }
+    };
+
+    const userSelect = (selected) => {
+      selectedRole.value = selected;
     };
 
     return {
       data,
       submit,
+      selected,
+      userSelect,
+      selectedRole,
     };
+  },
+  computed: {
+    ...mapState({
+      sortOptions: (state) => state.post.sortOptions,
+    }),
   },
 };
 </script>
