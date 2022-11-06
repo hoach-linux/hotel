@@ -34,6 +34,7 @@
           >
           <my-button
             class="btn-delete-post post-button"
+            v-if="userData.userRole !== 'client'"
             @click="$emit('remove', hotel)"
             >Remove</my-button
           >
@@ -49,6 +50,7 @@ export default {
   data() {
     return {
       maxSymbol: 300,
+      userData: JSON.parse(localStorage.getItem('userData')),
     };
   },
   props: {

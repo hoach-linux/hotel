@@ -1,7 +1,7 @@
 <template>
   <transition>
     <div class="container">
-      <my-input v-model:value="searchQuery" placeholder="Search..." />
+      <my-input v-model:value="searchQuery" placeholder="Search..." v-if="userData.userRole === 'owner'"/>
       <div class="app__btns">
         <my-button
           v-if="userData.userRole === 'owner'"
@@ -20,7 +20,7 @@
           </my-dialog>
         </transition>
       </teleport>
-      <my-header :header="'Your Hotels'" />
+      <my-header :header="'Hotels'" />
       <transition mode="out-in">
         <hotel-list
           :hotels="searchedHotels"

@@ -1,7 +1,7 @@
 <template>
   <div class="post-id-page container">
     <div class="app__btns" v-if="auth">
-      <my-button @click="showDialog" class="create-post flex-1 md:flex-auto m-0"
+      <my-button @click="showDialog" class="create-post flex-1 md:flex-auto m-0" v-if="userData.userRole !== 'client'"
         >Create Menu</my-button
       >
     </div>
@@ -35,7 +35,7 @@
               {{ menu.description }}
             </blockquote>
             <my-button
-              v-if="auth"
+              v-if="userData.userRole !== 'client'"
               @click="removeMenu(menu)"
               class="button-remove content-between min-w-full"
               >Remove</my-button
