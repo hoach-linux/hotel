@@ -134,7 +134,7 @@ export default {
           await router.push("/login?message=registered");
         }
       } catch (error) {
-
+        alert(`Error: ${error.message}`)
       }
     };
 

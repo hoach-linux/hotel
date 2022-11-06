@@ -14,9 +14,9 @@
       <my-input
         v-model:value="data.hotelName"
         type="text"
-        placeholder="Hotel name"
+        placeholder="Hotel Name"
         required
-        v-if="selectedRole === 'admin' || selectedRole === 'client'"
+        v-if="selectedRole !== 'owner'"
       />
       <my-input
         v-model:value="data.email"
@@ -112,7 +112,9 @@ export default {
       }
     };
     
-    const userSelect = (selected) => selectedRole.value = selected
+    const userSelect = (selected) => {
+      selectedRole.value = selected
+    }
 
 
     return {
