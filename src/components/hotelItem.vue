@@ -29,7 +29,7 @@
         <div class="buttons">
           <my-button
             class="btn-read_more-post post-button"
-            @click="$router.push(`/hotels/${userId}`)"
+            @click="$router.push(`/hotels/${hotel.title}`)"
             >Menu</my-button
           >
           <my-button
@@ -49,7 +49,6 @@ export default {
   data() {
     return {
       maxSymbol: 300,
-      userId: Cookies.get('userId'),
     };
   },
   props: {

@@ -77,31 +77,48 @@ export default {
       email: "",
       password: "",
       hotelName: "",
+      userRole: "",
     });
     const router = useRouter();
     const selected = ref("");
-    const selectedRole = ref("")
+    const selectedRole = ref("");
 
     const submit = async () => {
       try {
         let response = await axios.post(
           "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/auth/login",
           {
+            hotelName: data.hotelName,
             email: data.email,
             password: data.password,
+            userRole: selectedRole.value,
           }
         );
 
         await localStorage.setItem("userData", response.config.data);
 
         let getUserData = JSON.parse(localStorage.getItem("userData"));
-        let userData = {
-          email: getUserData.email,
-        };
-        let userDataJson = JSON.stringify(userData);
+        let userData;
+        let userDataJson;
 
-        localStorage.setItem("userData", userDataJson);
-        console.log(userDataJson);
+        if (selectedRole == "owner") {
+          userData = {
+            email: getUserData.email,
+            userRole: getUserData.userRole,
+          };
+          userDataJson = JSON.stringify(userData);
+
+          localStorage.setItem("userData", userDataJson);
+        } else {
+          userData = {
+            email: getUserData.email,
+            hotelName: getUserData.hotelName,
+            userRole: getUserData.userRole,
+          };
+          userDataJson = JSON.stringify(userData);
+
+          localStorage.setItem("userData", userDataJson);
+        }
 
         Cookies.set("token", `${response.data.data.access_token}`);
         Cookies.set("refresh_token", `${response.data.data.refresh_token}`);
@@ -111,18 +128,17 @@ export default {
         alert("Wrong email or password");
       }
     };
-    
-    const userSelect = (selected) => {
-      selectedRole.value = selected
-    }
 
+    const userSelect = (selected) => {
+      selectedRole.value = selected;
+    };
 
     return {
       data,
       submit,
       selected,
       selectedRole,
-      userSelect
+      userSelect,
     };
   },
   mounted() {

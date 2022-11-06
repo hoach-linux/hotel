@@ -94,7 +94,6 @@ export default {
 
     const submit = async () => {
       try {
-        console.log(selectedRole)
         if (selectedRole.value === "client" || selectedRole.value === "") {
           await axios.post(
             "https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/users",

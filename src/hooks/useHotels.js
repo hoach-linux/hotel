@@ -31,20 +31,31 @@ export default function usePosts(limit) {
 
       totalPages.value = Math.ceil(allHotels.data.meta.total_count / limit);
       page.value = totalPages.value;
+      let response;
 
-      const response = await axios.get(
-        `${serverUrl.value}/items/hotels?filter={ "user_created": { "email": "${userData.value.email}"} }`,
-        {
-          headers: {
-            Authorization: `Bearer ${Cookies.get("token")}`,
-          },
-          params: {
-            page: page.value,
-            limit: limit,
-          },
-        }
-      );
-
+      if (userData.value.userRole === "owner") {
+        response = await axios.get(
+          `${serverUrl.value}/items/hotels?filter={ "user_created": { "email": "${userData.value.email}"} }`,
+          {
+            headers: {
+              Authorization: `Bearer ${Cookies.get("token")}`,
+            },
+            params: {
+              page: page.value,
+              limit: limit,
+            },
+          }
+        );
+      } else {
+        response = await axios.get(
+          `${serverUrl.value}/items/hotels?filter={ "title":"${userData.value.hotelName}"}`,
+          {
+            headers: {
+              Authorization: `Bearer ${Cookies.get("token")}`,
+            },
+          }
+        );
+      }
       hotels.value = await response.data.data.reverse();
     } catch (error) {
       if (error.message == "Request failed with status code 401") {

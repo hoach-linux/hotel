@@ -38,7 +38,9 @@
         hover:file:bg-blue-600 hover:file:text-white
       "
     />
-    <my-button class="btn-menu" @click="canClickBtn" type="submit">Create</my-button>
+    <my-button class="btn-menu" @click="canClickBtn" type="submit"
+      >Create</my-button
+    >
   </form>
 </template>
 
@@ -50,20 +52,18 @@ export default {
         title: "",
         logo: "",
         description: "",
+        hotelName: "",
       },
+      userData: JSON.parse(localStorage.getItem("userData")),
     };
   },
   methods: {
     createMenu() {
       this.file = document.getElementById("file");
 
-      this.$emit("create", this.menu, this.file);
+      this.menu.hotelName = this.userData.hotelName;
 
-      this.menu = {
-        title: "",
-        logo: "",
-        description: "",
-      };
+      this.$emit("create", this.menu, this.file);
     },
     canClickBtn() {
       this.file = document.getElementById("file");

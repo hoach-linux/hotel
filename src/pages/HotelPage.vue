@@ -4,6 +4,7 @@
       <my-input v-model:value="searchQuery" placeholder="Search..." />
       <div class="app__btns">
         <my-button
+          v-if="userData.userRole === 'owner'"
           @click="showDialog"
           class="create-post flex-1 md:flex-auto m-0"
           >Create Hotel</my-button
@@ -55,7 +56,10 @@ export default {
     hotelForm,
   },
   data() {
-    return { dialogVisible: false };
+    return { 
+      dialogVisible: false,
+      userData: JSON.parse(localStorage.getItem('userData')),
+    };
   },
   setup() {
     const store = useStore();

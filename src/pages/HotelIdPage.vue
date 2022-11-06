@@ -83,19 +83,11 @@ export default {
     async fetchMenu() {
       let response;
       try {
-        if (this.auth) {
-          response = await axios.get(
-            `${this.$store.state.post.serverUrl}/items/menu?filter={ "user_created": { "id": "${Cookies.get("userId")}" }}`
-          );
+        response = await axios.get(
+          `${this.$store.state.post.serverUrl}/items/menu?filter={ "hotel_name":"${this.$route.params.hotelName}"}`
+        );
 
-          this.menus = response.data.data;
-        } else {
-          response = await axios.get(
-            `${this.$store.state.post.serverUrl}/items/menu?filter={ "user_created": { "id": "${this.$route.params.id}" }}`
-          );
-
-          this.menus = response.data.data;
-        }
+        this.menus = response.data.data;
       } catch (error) {
         console.log(error);
       }
@@ -124,6 +116,7 @@ export default {
                 title: menu.title,
                 logo: responseData[responseData.length - 1].id,
                 description: menu.description,
+                hotel_name: menu.hotelName,
               },
             })
               .then(() => this.menus.unshift(menu))
