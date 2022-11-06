@@ -37,9 +37,6 @@ export default {
     const store = useStore();
     const auth = computed(() => store.state.post.authenticated);
 
-    // const logOut = () => {
-
-    // };
     const logOut = async () => {
       try {
         let response = await axios.post(
@@ -49,6 +46,8 @@ export default {
           }
         );
         Cookies.remove("token")
+
+        localStorage.clear()
 
         store.dispatch("post/authFalse");
 
