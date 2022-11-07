@@ -4,7 +4,7 @@
       class="flex flex-col p-5 rounded-xl w-96 register-form"
       @submit.prevent="submit"
     >
-      <h1 class="text-4xl mb-5">Sign in</h1>
+      <h1 class="text-4xl mb-5">Sign up</h1>
       <my-select
         v-model:modelValue="selected"
         class="select flex-1"
@@ -43,7 +43,7 @@
           text-white
           mt-1
         "
-        >Continue</my-button
+        >Sign Up</my-button
       >
       <p
         @click="$router.push('/login')"
