@@ -24,7 +24,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 99;
+  z-index: 1001;
 }
 
 .dialog__content {

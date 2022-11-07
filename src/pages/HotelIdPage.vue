@@ -64,6 +64,24 @@
         class="close-dishes-menu"
         @click="closeDishesMenu"
       />
+      <div class="create-dish" v-if="auth">
+        <my-button
+          @click="showDishDialog"
+          class="create-post flex-1 md:flex-auto m-0"
+          v-if="userData.userRole !== 'client' && userData.userRole !== ''"
+          >Create Dish</my-button
+        >
+      </div>
+      <teleport to="body">
+        <transition name="modal-show">
+          <my-dialog
+            v-model:show="dishDialogVisible"
+            style="will-change: transform"
+          >
+            <dish-form :menuId="menuId" @create="createDish" />
+          </my-dialog>
+        </transition>
+      </teleport>
       <div class="dishes-items">
         <div class="dish" v-for="dish in dishes" :key="dish.id">
           <img
@@ -71,7 +89,11 @@
             alt=""
           />
           <span>{{ dish.title }}</span>
-          <my-button class="add-btn">add</my-button>
+          <p>{{ dish.weight }}</p>
+          <my-button class="add-btn">
+            <font-awesome-icon icon="fa-solid fa-plus" />
+            Add
+          </my-button>
         </div>
       </div>
     </div>
@@ -85,18 +107,21 @@ import menuForm from "@/components/menuForm.vue";
 import { onMounted, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import Cookies from "js-cookie";
+import dishForm from "@/components/dishForm.vue";
 
 export default {
-  components: { hotelItem, menuForm },
+  components: { hotelItem, menuForm, dishForm },
   data() {
     return {
       menus: [],
       dishes: [],
       dialogVisible: false,
+      dishDialogVisible: false,
       userData: JSON.parse(localStorage.getItem("userData")),
       isActive: false,
       activeClass: "active",
       notActiveClass: "notActive",
+      menuId: "",
     };
   },
   setup() {
@@ -112,6 +137,9 @@ export default {
     };
   },
   methods: {
+    showDishDialog() {
+      this.dishDialogVisible = true;
+    },
     showDialog() {
       this.dialogVisible = true;
     },
@@ -130,14 +158,13 @@ export default {
     async fetchDish(menuId) {
       let response;
       try {
-        console.log(menuId);
         response = await axios.get(
           `${this.$store.state.post.serverUrl}/items/dish?filter={ "menuId":"${menuId}"}`
         );
 
         this.dishes = response.data.data;
         this.isActive = true;
-        console.log(this.isNotActive, this.isActive);
+        this.menuId = menuId
       } catch (error) {
         console.log(error);
       }
@@ -188,6 +215,40 @@ export default {
 
       return axios.post(`${this.$store.state.post.serverUrl}/files`, formData);
     },
+    createDish(dish, file) {
+      this.dishDialogVisible = false;
+      this.pushMenuImage(file);
+
+      setTimeout(() => {
+        const response = axios
+          .get(`${this.$store.state.post.serverUrl}/files?sort=uploaded_on`, {
+            params: {
+              limit: 1000000,
+            },
+          })
+          .then((response) => {
+            let responseData = response.data.data;
+
+            return axios({
+              method: "post",
+              url: `${this.$store.state.post.serverUrl}/items/dish`,
+              headers: {
+                Authorization: `Bearer ${this.auth}`,
+              },
+              data: {
+                title: dish.title,
+                image: responseData[responseData.length - 1].id,
+                weight: dish.weight,
+                menuId: dish.menuId,
+              },
+            })
+              .then(() => this.dishes.unshift(dish))
+              .then(() => {
+                document.location.reload(true);
+              });
+          });
+      }, 1000);
+    },
     removeMenu(menu) {
       try {
         this.menus = this.menus.filter((m) => m.id !== menu.id);
@@ -225,10 +286,10 @@ export default {
   position: fixed;
   top: 0;
   right: 0;
-  max-width: 660px;
+  width: 660px;
   background: var(--white-color);
   color: #fff;
-  z-index: 1000;
+  z-index: 999;
   padding: 20px;
   overflow-y: scroll;
   transition: 0.3s ease-in-out;
@@ -238,10 +299,17 @@ export default {
 .dishes-items {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 .dishes.active {
   transform: translateX(0);
+}
+.create-dish {
+  margin-top: 50px;
+}
+.create-dish > .btn {
+  min-width: 100%;
+  margin: 0;
 }
 .close-dishes-menu {
   position: absolute;
@@ -253,7 +321,7 @@ export default {
   min-height: 30px;
   padding: 5px;
   cursor: pointer;
-  transition: .3s ease-in-out;
+  transition: 0.3s ease-in-out;
 }
 .close-dishes-menu:hover {
   background: #fff;
@@ -267,7 +335,7 @@ export default {
   border-radius: 10px;
   background: #1c1f26;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  max-height: 400px;
+  max-height: 500px;
   padding: 10px;
 }
 .dish > img {
@@ -278,6 +346,13 @@ export default {
 .dish > span {
   font-size: 25px;
   font-weight: 500;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+.dish > p {
+  margin: 5px 0;
+  color: #9e9b98;
+  font-size: 16px;
 }
 .add-btn {
   min-height: auto;
@@ -285,6 +360,7 @@ export default {
   margin: 0 !important;
   border-radius: 10px;
   background: #161617;
+  text-transform: inherit;
 }
 .add-btn:hover {
   min-width: 100%;
@@ -400,6 +476,9 @@ export default {
   .dish {
     min-width: 100%;
     margin: 5px 0;
+  }
+  .dishes {
+    width: 100%;
   }
 }
 

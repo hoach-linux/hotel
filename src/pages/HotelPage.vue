@@ -1,7 +1,11 @@
 <template>
   <transition>
     <div class="container">
-      <my-input v-model:value="searchQuery" placeholder="Search..." v-if="userData.userRole === 'owner'"/>
+      <my-input
+        v-model:value="searchQuery"
+        placeholder="Search..."
+        v-if="userData.userRole === 'owner'"
+      />
       <div class="app__btns">
         <my-button
           v-if="userData.userRole === 'owner'"
@@ -10,16 +14,11 @@
           >Create Hotel</my-button
         >
       </div>
-      <teleport to="body">
-        <transition name="modal-show">
-          <my-dialog
-            v-model:show="dialogVisible"
-            style="will-change: transform"
-          >
-            <hotel-form @create="createPost" />
-          </my-dialog>
-        </transition>
-      </teleport>
+      <transition name="modal-show">
+        <my-dialog v-model:show="dialogVisible" style="will-change: transform">
+          <hotel-form @create="createPost" />
+        </my-dialog>
+      </transition>
       <my-header :header="'Hotels'" />
       <transition mode="out-in">
         <hotel-list
@@ -48,7 +47,7 @@ import useSortedHotels from "@/hooks/useSortedHotels";
 import useSearchedHotels from "@/hooks/useSearchedHotels";
 import { useStore } from "vuex";
 import messages from "@/utils/messages";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
 
 export default {
   components: {
@@ -56,9 +55,9 @@ export default {
     hotelForm,
   },
   data() {
-    return { 
+    return {
       dialogVisible: false,
-      userData: JSON.parse(localStorage.getItem('userData')),
+      userData: JSON.parse(localStorage.getItem("userData")),
     };
   },
   setup() {
@@ -123,7 +122,7 @@ export default {
               .then(() => this.hotels.unshift(hotel))
               .then(() => {
                 this.$router.push("/hotels?message=hotel_created");
-                
+
                 document.location.reload(true);
               });
           });
