@@ -19,7 +19,7 @@
           <hotel-form @create="createPost" />
         </my-dialog>
       </transition>
-      <my-header :header="'Hotels'" />
+      <my-header :header="'Hotels'" v-if="userData.userRole === 'owner'"/>
       <transition mode="out-in">
         <hotel-list
           :hotels="searchedHotels"

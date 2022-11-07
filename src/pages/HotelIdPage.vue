@@ -1,14 +1,6 @@
 <template>
   <div class="post-id-page container">
-    <div class="app__btns" v-if="auth">
-      <my-button
-        @click="showDialog"
-        class="create-post flex-1 md:flex-auto m-0"
-        v-if="userData.userRole !== 'client' && userData.userRole !== ''"
-        >Create Menu</my-button
-      >
-    </div>
-    <my-header :header="'Today\'s menu'" class="header" />
+    <my-header :header="'Menu'" class="header" />
     <teleport to="body">
       <transition name="modal-show">
         <my-dialog v-model:show="dialogVisible" style="will-change: transform">
@@ -39,7 +31,7 @@
             </blockquote>
             <div class="buttons-menu">
               <my-button class="btn" @click="fetchDish(menu.id)"
-                >Dishes</my-button
+                >Choose</my-button
               >
               <my-button
                 v-if="
@@ -54,48 +46,14 @@
         </div>
       </div>
     </transition>
-    <div
-      class="dishes"
-      @click.stop
-      :class="[isActive ? activeClass : notActiveClass]"
-    >
-      <font-awesome-icon
-        icon="fa-solid fa-arrow-right"
-        class="close-dishes-menu"
-        @click="closeDishesMenu"
-      />
-      <div class="create-dish" v-if="auth">
-        <my-button
-          @click="showDishDialog"
-          class="create-post flex-1 md:flex-auto m-0"
-          v-if="userData.userRole !== 'client' && userData.userRole !== ''"
-          >Create Dish</my-button
-        >
-      </div>
-      <teleport to="body">
-        <transition name="modal-show">
-          <my-dialog
-            v-model:show="dishDialogVisible"
-            style="will-change: transform"
-          >
-            <dish-form :menuId="menuId" @create="createDish" />
-          </my-dialog>
-        </transition>
-      </teleport>
-      <div class="dishes-items">
-        <div class="dish" v-for="dish in dishes" :key="dish.id">
-          <img
-            :src="`https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/assets/${dish.image}`"
-            alt=""
-          />
-          <span>{{ dish.title }}</span>
-          <p>{{ dish.weight }}</p>
-          <my-button class="add-btn">
-            <font-awesome-icon icon="fa-solid fa-plus" />
-            Add
-          </my-button>
-        </div>
-      </div>
+    <div class="app__btns" v-if="auth">
+      <my-button
+        @click="showDialog"
+        class="add-menu flex-1 md:flex-auto m-0"
+        v-if="userData.userRole !== 'client' && userData.userRole !== ''"
+      >
+        <font-awesome-icon icon="fa-solid fa-plus" />
+      </my-button>
     </div>
   </div>
 </template>
@@ -107,10 +65,9 @@ import menuForm from "@/components/menuForm.vue";
 import { onMounted, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import Cookies from "js-cookie";
-import dishForm from "@/components/dishForm.vue";
 
 export default {
-  components: { hotelItem, menuForm, dishForm },
+  components: { hotelItem, menuForm, },
   data() {
     return {
       menus: [],
@@ -164,13 +121,10 @@ export default {
 
         this.dishes = response.data.data;
         this.isActive = true;
-        this.menuId = menuId
+        this.menuId = menuId;
       } catch (error) {
         console.log(error);
       }
-    },
-    closeDishesMenu() {
-      this.isActive = false;
     },
     createMenu(menu, file) {
       this.dialogVisible = false;
@@ -214,40 +168,6 @@ export default {
       formData.append("file", file.files[0]);
 
       return axios.post(`${this.$store.state.post.serverUrl}/files`, formData);
-    },
-    createDish(dish, file) {
-      this.dishDialogVisible = false;
-      this.pushMenuImage(file);
-
-      setTimeout(() => {
-        const response = axios
-          .get(`${this.$store.state.post.serverUrl}/files?sort=uploaded_on`, {
-            params: {
-              limit: 1000000,
-            },
-          })
-          .then((response) => {
-            let responseData = response.data.data;
-
-            return axios({
-              method: "post",
-              url: `${this.$store.state.post.serverUrl}/items/dish`,
-              headers: {
-                Authorization: `Bearer ${this.auth}`,
-              },
-              data: {
-                title: dish.title,
-                image: responseData[responseData.length - 1].id,
-                weight: dish.weight,
-                menuId: dish.menuId,
-              },
-            })
-              .then(() => this.dishes.unshift(dish))
-              .then(() => {
-                document.location.reload(true);
-              });
-          });
-      }, 1000);
     },
     removeMenu(menu) {
       try {
@@ -295,6 +215,16 @@ export default {
   transition: 0.3s ease-in-out;
   transform: translateX(100%);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.add-menu {
+  background: var(--white-color);
+  margin: 0 !important;
+}
+.app__btns {
+  margin-bottom: 90px !important;
+}
+.add-menu:hover {
+  box-shadow: none;
 }
 .dishes-items {
   display: flex;
@@ -354,14 +284,6 @@ export default {
   color: #9e9b98;
   font-size: 16px;
 }
-.add-btn {
-  min-height: auto;
-  min-width: 100% !important;
-  margin: 0 !important;
-  border-radius: 10px;
-  background: #161617;
-  text-transform: inherit;
-}
 .add-btn:hover {
   min-width: 100%;
   box-shadow: none;
@@ -380,9 +302,6 @@ export default {
 }
 .menu {
   min-height: 50%;
-}
-.menus {
-  margin-bottom: 70px;
 }
 .main-menu {
   display: flex;

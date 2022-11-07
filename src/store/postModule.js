@@ -21,7 +21,6 @@ export const postModule = {
     sortOptions: [
       { value: "admin", name: "Admin" },
       { value: "owner", name: "Owner" },
-      { value: "client", name: "Client"}
     ],
   }),
   getters: {

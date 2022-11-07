@@ -26,6 +26,5 @@ export default {
 .btn:hover {
   box-shadow: rgba(26, 92, 255, 0.5) 0px 20px 20px -10px;
   color: white;
-  min-width: 180px;
 }
 </style>

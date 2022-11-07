@@ -81,7 +81,6 @@ export default {
     const data = reactive({
       firstName: "",
       lastName: "",
-      clientRole: "4e967166-975d-4a12-8fd8-e3fdb9e5be54",
       adminRole: "45facacc-afc6-4e96-9801-610a56153cde",
       ownerRole: "525d769c-b5cb-4476-beb6-c228df5cc30f",
       email: "",
