@@ -11,8 +11,11 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { faHotel } from "@fortawesome/free-solid-svg-icons";
 import { faBlog } from "@fortawesome/free-solid-svg-icons";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
+
 import "./style.css";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
@@ -24,7 +27,9 @@ library.add(
   faArrowLeft,
   faRightFromBracket,
   faArrowDown,
-  faHotel
+  faHotel,
+  faCircleXmark,
+  faArrowRight
 );
 
 const app = createApp(App);

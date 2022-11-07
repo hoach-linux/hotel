@@ -1,7 +1,10 @@
 <template>
   <div class="post-id-page container">
     <div class="app__btns" v-if="auth">
-      <my-button @click="showDialog" class="create-post flex-1 md:flex-auto m-0" v-if="userData.userRole !== 'client'"
+      <my-button
+        @click="showDialog"
+        class="create-post flex-1 md:flex-auto m-0"
+        v-if="userData.userRole !== 'client' && userData.userRole !== ''"
         >Create Menu</my-button
       >
     </div>
@@ -30,20 +33,48 @@
             />
           </div>
           <div class="main-menu md:mt-0 md:ml-5 ml-0 mt-5 flex-1">
-            <div class="post-main title mb-2">{{ menu.title }}</div>
-            <blockquote class="post-main mb-10">
+            <span class="post-main title mb-2">{{ menu.title }}</span>
+            <blockquote class="post-main mb-20">
               {{ menu.description }}
             </blockquote>
-            <my-button
-              v-if="userData.userRole !== 'client'"
-              @click="removeMenu(menu)"
-              class="button-remove content-between min-w-full"
-              >Remove</my-button
-            >
+            <div class="buttons-menu">
+              <my-button class="btn" @click="fetchDish(menu.id)"
+                >Dishes</my-button
+              >
+              <my-button
+                v-if="
+                  userData.userRole !== 'client' && userData.userRole !== ''
+                "
+                @click="removeMenu(menu)"
+                class="button-remove btn"
+                >Remove</my-button
+              >
+            </div>
           </div>
         </div>
       </div>
     </transition>
+    <div
+      class="dishes"
+      @click.stop
+      :class="[isActive ? activeClass : notActiveClass]"
+    >
+      <font-awesome-icon
+        icon="fa-solid fa-arrow-right"
+        class="close-dishes-menu"
+        @click="closeDishesMenu"
+      />
+      <div class="dishes-items">
+        <div class="dish" v-for="dish in dishes" :key="dish.id">
+          <img
+            :src="`https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/assets/${dish.image}`"
+            alt=""
+          />
+          <span>{{ dish.title }}</span>
+          <my-button class="add-btn">add</my-button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -60,8 +91,12 @@ export default {
   data() {
     return {
       menus: [],
+      dishes: [],
       dialogVisible: false,
       userData: JSON.parse(localStorage.getItem("userData")),
+      isActive: false,
+      activeClass: "active",
+      notActiveClass: "notActive",
     };
   },
   setup() {
@@ -91,6 +126,24 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    async fetchDish(menuId) {
+      let response;
+      try {
+        console.log(menuId);
+        response = await axios.get(
+          `${this.$store.state.post.serverUrl}/items/dish?filter={ "menuId":"${menuId}"}`
+        );
+
+        this.dishes = response.data.data;
+        this.isActive = true;
+        console.log(this.isNotActive, this.isActive);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    closeDishesMenu() {
+      this.isActive = false;
     },
     createMenu(menu, file) {
       this.dialogVisible = false;
@@ -155,10 +208,88 @@ export default {
   mounted() {
     this.fetchMenu();
   },
+  computed: {
+    classObject() {
+      return {
+        active: this.isActive && !this.isNotActive,
+        notActive: !this.isActive && this.isNotActive,
+      };
+    },
+  },
 };
 </script>
 
 <style scoped>
+.dishes {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  max-width: 660px;
+  background: var(--white-color);
+  color: #fff;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: scroll;
+  transition: 0.3s ease-in-out;
+  transform: translateX(100%);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.dishes-items {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
+.dishes.active {
+  transform: translateX(0);
+}
+.close-dishes-menu {
+  position: absolute;
+  z-index: 2;
+  font-size: 15px;
+  font-weight: 100;
+  right: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  padding: 5px;
+  cursor: pointer;
+  transition: .3s ease-in-out;
+}
+.close-dishes-menu:hover {
+  background: #fff;
+  color: #000;
+  border-radius: 50%;
+}
+.dish {
+  width: 48%;
+  margin: 5px;
+  border: #383d48 2px solid;
+  border-radius: 10px;
+  background: #1c1f26;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  max-height: 400px;
+  padding: 10px;
+}
+.dish > img {
+  height: 250px;
+  width: 100%;
+  border-radius: 10px;
+}
+.dish > span {
+  font-size: 25px;
+  font-weight: 500;
+}
+.add-btn {
+  min-height: auto;
+  min-width: 100%;
+  margin: 0 !important;
+  border-radius: 10px;
+  background: #161617;
+}
+.add-btn:hover {
+  min-width: 100%;
+  box-shadow: none;
+}
 .post-id-page .post {
   margin: 10px 0;
   margin-bottom: 20px !important;
@@ -175,14 +306,30 @@ export default {
   min-height: 50%;
 }
 .menus {
-  margin-bottom: 60px;
+  margin-bottom: 70px;
 }
 .main-menu {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 .post-main {
   min-width: 100%;
+}
+.buttons-menu {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  min-width: 100%;
+}
+.btn {
+  flex: 1;
+  margin: 0 5px;
+  min-width: auto;
+}
+.btn:hover {
+  flex: 2;
 }
 .button-remove {
   color: #fff !important;
@@ -192,17 +339,11 @@ export default {
   cursor: pointer !important;
   transition: 0.3s ease-in-out !important;
   border-radius: 10px !important;
-  min-width: 100%;
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-  min-width: 60%;
 }
 .button-remove:hover {
   box-shadow: 0 15px 20px #740127;
   background: #df1659 !important;
   color: #fff !important;
-  min-width: 60%;
 }
 .title {
   font-size: 25px;
@@ -253,9 +394,12 @@ export default {
 @media (max-width: 768px) {
   .button-remove,
   .button-remove:hover {
-    min-width: 100%;
     position: relative;
     right: 0;
+  }
+  .dish {
+    min-width: 100%;
+    margin: 5px 0;
   }
 }
 
