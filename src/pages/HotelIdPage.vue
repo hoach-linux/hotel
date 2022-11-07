@@ -281,7 +281,7 @@ export default {
 }
 .add-btn {
   min-height: auto;
-  min-width: 100%;
+  min-width: 100% !important;
   margin: 0 !important;
   border-radius: 10px;
   background: #161617;
