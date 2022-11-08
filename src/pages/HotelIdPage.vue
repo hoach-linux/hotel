@@ -24,6 +24,15 @@
               class="img"
             />
           </div>
+          <font-awesome-icon
+            icon="fa-solid fa-ellipsis-vertical"
+            class="crud waves-effect waves-light"
+            v-if="userData.userRole !== 'client' && userData.userRole !== ''"
+          />
+          <div class="crud-items">
+            <my-button @click="removeMenu(menu)">remove</my-button>
+            <my-button>update</my-button>
+          </div>
           <div class="main-menu md:mt-0 md:ml-5 ml-0 mt-5 flex-1">
             <span class="post-main title mb-2">{{ menu.title }}</span>
             <blockquote class="post-main mb-20">
@@ -32,14 +41,6 @@
             <div class="buttons-menu">
               <my-button class="btn" @click="fetchDish(menu.id)"
                 >Choose</my-button
-              >
-              <my-button
-                v-if="
-                  userData.userRole !== 'client' && userData.userRole !== ''
-                "
-                @click="removeMenu(menu)"
-                class="button-remove btn"
-                >Remove</my-button
               >
             </div>
           </div>
@@ -67,7 +68,7 @@ import { useStore } from "vuex";
 import Cookies from "js-cookie";
 
 export default {
-  components: { hotelItem, menuForm, },
+  components: { hotelItem, menuForm },
   data() {
     return {
       menus: [],
@@ -109,21 +110,9 @@ export default {
 
         this.menus = response.data.data;
       } catch (error) {
-        console.log(error);
-      }
-    },
-    async fetchDish(menuId) {
-      let response;
-      try {
-        response = await axios.get(
-          `${this.$store.state.post.serverUrl}/items/dish?filter={ "menuId":"${menuId}"}`
-        );
-
-        this.dishes = response.data.data;
-        this.isActive = true;
-        this.menuId = menuId;
-      } catch (error) {
-        console.log(error);
+        if (error.request.status == 401) {
+          alert("Authorization timed out");
+        }
       }
     },
     createMenu(menu, file) {
@@ -189,18 +178,55 @@ export default {
   mounted() {
     this.fetchMenu();
   },
-  computed: {
-    classObject() {
-      return {
-        active: this.isActive && !this.isNotActive,
-        notActive: !this.isActive && this.isNotActive,
-      };
-    },
-  },
+  computed: {},
 };
 </script>
 
 <style scoped>
+.crud {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  cursor: pointer;
+  background: #000;
+  z-index: 2;
+  width: 20px;
+  height: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  transform: rotate(90deg);
+}
+.crud-items {
+  position: absolute;
+  top: 49px;
+  right: 5px;
+  background: #000;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  min-width: 50%;
+  opacity: 0;
+  transform: scale(0);
+  transition: 0.2s ease-in-out;
+  padding: 10px;
+}
+.crud:hover ~ .crud-items,
+.crud-items:hover {
+  opacity: 1;
+  transform: scale(1);
+}
+.crud-items > button {
+  background: none;
+  margin: 0;
+  border-radius: 10px;
+  min-width: 100%;
+  transition: 0.3s ease-in-out;
+}
+.crud-items > button:hover {
+  box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
+    rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
 .dishes {
   height: 100vh;
   position: fixed;

@@ -16,6 +16,8 @@ import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
+
 
 import "./style.css";
 import ElementPlus from "element-plus";
@@ -31,7 +33,8 @@ library.add(
   faHotel,
   faCircleXmark,
   faArrowRight,
-  faPlus
+  faPlus,
+  faEllipsisVertical
 );
 
 const app = createApp(App);

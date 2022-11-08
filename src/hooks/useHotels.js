@@ -58,6 +58,7 @@ export default function usePosts(limit) {
       }
       hotels.value = await response.data.data.reverse();
     } catch (error) {
+      console.log(error.status)
       if (error.message == "Request failed with status code 401") {
         alert("Login timed out, please login again");
 

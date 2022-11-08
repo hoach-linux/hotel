@@ -147,6 +147,7 @@ export default {
           },
         });
       } catch (error) {
+        console.log(error.status)
         alert("You are not registered");
       }
     },

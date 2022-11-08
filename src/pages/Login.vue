@@ -9,7 +9,7 @@
         v-model:modelValue="selected"
         class="select flex-1"
         :options="sortOptions"
-        @userSelect="userSelect"
+        @userSelect="userSelectRole"
       />
       <my-input
         v-model:value="data.hotelName"
@@ -83,6 +83,11 @@ export default {
     const selected = ref("");
     const selectedRole = ref("");
 
+    const userSelectRole = (selected) => {
+      selectedRole.value = selected;
+      console.log(selectedRole)
+    };
+
     const submit = async () => {
       try {
         let response = await axios.post(
@@ -129,16 +134,12 @@ export default {
       }
     };
 
-    const userSelect = (selected) => {
-      selectedRole.value = selected;
-    };
-
     return {
       data,
       submit,
       selected,
       selectedRole,
-      userSelect,
+      userSelectRole,
     };
   },
   mounted() {
