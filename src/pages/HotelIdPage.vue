@@ -17,6 +17,16 @@
           style="will-change: transform"
           class="post min-w-full flex-col md:flex-row"
         >
+          <teleport to="body">
+            <transition name="modal-show">
+              <my-dialog
+                v-model:show="updateDialogVisible"
+                style="will-change: transform"
+              >
+                <update-form @update="updateDish" :menuUpdate="menu"/>
+              </my-dialog>
+            </transition>
+          </teleport>
           <div class="img-wrapper min-h-full min-w-full md:min-w-0">
             <img
               :src="`https://b876ad7f-dd71-4ed3-829a-b2488d40b627.selcdn.net/assets/${menu.logo}`"
@@ -31,7 +41,7 @@
           />
           <div class="crud-items">
             <my-button @click="removeMenu(menu)">remove</my-button>
-            <my-button>update</my-button>
+            <my-button @click="showDialogUpdate">update</my-button>
           </div>
           <div class="main-menu md:mt-0 md:ml-5 ml-0 mt-5 flex-1">
             <span class="post-main title mb-2">{{ menu.title }}</span>
@@ -63,18 +73,19 @@
 import axios from "axios";
 import hotelItem from "@/components/hotelItem.vue";
 import menuForm from "@/components/menuForm.vue";
+import updateForm from "@/components/updateForm.vue";
 import { onMounted, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import Cookies from "js-cookie";
 
 export default {
-  components: { hotelItem, menuForm },
+  components: { hotelItem, menuForm, updateForm },
   data() {
     return {
       menus: [],
       dishes: [],
       dialogVisible: false,
-      dishDialogVisible: false,
+      updateDialogVisible: false,
       userData: JSON.parse(localStorage.getItem("userData")),
       isActive: false,
       activeClass: "active",
@@ -95,11 +106,44 @@ export default {
     };
   },
   methods: {
-    showDishDialog() {
-      this.dishDialogVisible = true;
+    showDialogUpdate() {
+      this.updateDialogVisible = true;
     },
     showDialog() {
       this.dialogVisible = true;
+    },
+    async updateDish(menu, file) {
+      this.dialogVisible = false;
+      this.pushMenuImage(file);
+
+      setTimeout(() => {
+        const response = axios
+          .get(`${this.$store.state.post.serverUrl}/files?sort=uploaded_on`, {
+            params: {
+              limit: 1000000,
+            },
+          })
+          .then((response) => {
+            let responseData = response.data.data;
+
+            return axios({
+              method: "patch",
+              url: `${this.$store.state.post.serverUrl}/items/menu/${menu.id}`,
+              headers: {
+                Authorization: `Bearer ${this.auth}`,
+              },
+              data: {
+                title: menu.title,
+                logo: responseData[responseData.length - 1].id,
+                description: menu.description,
+              },
+            })
+              .then(() => this.menus.unshift(menu))
+              .then(() => {
+                document.location.reload(true);
+              });
+          });
+      }, 1000);
     },
     async fetchMenu() {
       let response;
